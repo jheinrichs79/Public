@@ -5,6 +5,6 @@ Please see Screenshot.png for how the utility works.
 *When making your own training. Make sure it follows the same # of columns and the header names.
 
 NOTE
-#Pre-requisits:
+Pre-requisits:
 *Fully functional Ubunutu install / WSL
 *Powershell installed
