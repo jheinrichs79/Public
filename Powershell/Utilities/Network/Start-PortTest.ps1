@@ -1,3 +1,6 @@
+#Written by: Jared Heinrichs
+#
+
 #Global Params
 param (
     $NetworkHost,
