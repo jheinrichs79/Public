@@ -1,7 +1,7 @@
 <#
 ========================================================================
 Written by: 	Jared Heinrichs
-URL:		https://github.com/jheinrichs79/Public/b
+URL:		https://github.com/jheinrichs79/Public/
 ========================================================================
 EULA - Completely free to use as long as you keep this header
 ------------------------------------------------------------------------
