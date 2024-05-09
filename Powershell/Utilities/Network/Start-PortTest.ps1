@@ -1,5 +1,20 @@
-#Written by: Jared Heinrichs
-#
+<#
+Written by: Jared Heinrichs
+EULA - Completely free to use as long as you keep this header
+
+Save as: Start-PortTest.ps1
+Run it as:
+
+Show only the tests that failed and format it as a table:
+.\Start-PortTest.ps1 -NetworkHost 192.168.101.45 -TCPPorts 900,9000,1234 -UDPPorts 88,137 | Where-Object TestSucceeded -eq $false | Format-Table
+
+Show all test info on screen and then save the output to “C:\bin\PortTest.csv
+.\Start-PortTest.ps1 -NetworkHost 192.168.101.45 -TCPPorts 900,9000,1234 -UDPPorts 88,137 -LogFileFolder "C:\bin"
+
+Show all test info on screen and then save the output to “C:\bin\PortTest.csv . Overwrite the log file with only the data from this test.
+.\Start-PortTest.ps1 -NetworkHost 192.168.101.45 -TCPPorts 900,9000,1234 -UDPPorts 88,137 -LogFileFolder "C:\bin" -OverWriteLog
+
+#>
 
 #Global Params
 param (
