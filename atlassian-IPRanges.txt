@@ -1,4 +1,0 @@
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$j = Invoke-WebRequest "https://ip-ranges.atlassian.com/" | ConvertFrom-Json
-$SyncToken = $j.syncToken
-$CIDRs = $j.items.cidr | Where-Object $_ -nl "*:*"| Sort-Object
