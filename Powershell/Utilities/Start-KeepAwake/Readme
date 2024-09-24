@@ -1,5 +1,18 @@
-This utility was based off other code I found on the internet. Almost none of the examples had a feature to preset the amount of time you want the application to run.
+ABOUT THE UTILITY
+==========================
+This utility was mostly based off other code I found on the internet.
+    Thanks James Freeman!
+    https://gist.github.com/jamesfreeman959/231b068c3d1ed6557675f21c0e346a9c
 
+I couldn't find any examples that had a feature to set the amount of time you want the utility to run.
+Also the application was designed to keep the machine awake at random time intervals.
+It was also a powershell script only. 
+
+I have provided my PowerShell code as well as a compiled version for people that just want to run the utility.
+
+
+How to Run
+==========================
 If you double click the file, the application will ask you how many hours you want it to run for.
 If you run the program from the command line or batch file you can pre-enter how long you want the program to run at run time, that way you don't get asked when run.
 
