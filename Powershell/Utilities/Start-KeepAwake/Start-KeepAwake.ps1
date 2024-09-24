@@ -62,7 +62,7 @@ if (!($Hours)){
     $Pause = $true
 }
 if ($Pause){
-    Start-KeepAwake -Hours $Hours
-} else {
     Start-KeepAwake -Hours $Hours -Pause
+} else {
+    Start-KeepAwake -Hours $Hours
 }
