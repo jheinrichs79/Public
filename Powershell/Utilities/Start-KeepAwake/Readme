@@ -4,12 +4,12 @@ This utility was mostly based off other code I found on the internet.
     Thanks James Freeman!
     https://gist.github.com/jamesfreeman959/231b068c3d1ed6557675f21c0e346a9c
 
-I couldn't find any examples that had a feature to set the amount of time you want the utility to run.
-Also the application was designed to keep the machine awake at random time intervals.
-It was also a powershell script only. 
+I couldn't find any examples that had a feature set I wanted:
+    Random keep alive time
+    Dynamic time to run
+    PowerShell Only. It would be nice to have a compiled version.
 
-I have provided my PowerShell code as well as a compiled version for people that just want to run the utility.
-
+My version includes all these extra features.
 
 How to Run
 ==========================
@@ -21,11 +21,17 @@ Examples:
   # 1.) Keep awake for 1hr
   ==========================================
   Start-KeepAwake.exe -hours 1
+  or
+  .\Start-KeepAwake.ps1 -Hours 1
   
   # 2.) Keep awake for 30 minutes
   ==========================================
   Start-KeepAwake.exe -hours .5
+  or
+  .\Start-KeepAwake.ps1 -Hours .5
   
   # 3.) Keep awake for 7hrs and 15 minutes
   ==========================================
   Start-KeepAwake.exe -hours 7.25
+  or
+  .\Start-KeepAwake.ps1 -Hours 7.25
