@@ -7,6 +7,7 @@ This utility was mostly based off other code I found on the internet.
 I couldn't find any examples that had a feature set I wanted:
     Random keep alive time
     Dynamic time to run
+    Add a Pause at completion
     PowerShell Only. It would be nice to have a compiled version.
 
 My version includes all these extra features.
@@ -19,19 +20,28 @@ If you run the program from the command line or batch file you can pre-enter how
 Examples:
 
   # 1.) Keep awake for 1hr
-  ==========================================
+  ========================================================
   Start-KeepAwake.exe -hours 1
   or
   .\Start-KeepAwake.ps1 -Hours 1
-  
+
+
   # 2.) Keep awake for 30 minutes
-  ==========================================
+  ========================================================
   Start-KeepAwake.exe -hours .5
   or
   .\Start-KeepAwake.ps1 -Hours .5
-  
-  # 3.) Keep awake for 7hrs and 15 minutes
-  ==========================================
+
+
+  # 4.) Keep awake for 7hrs and 15 minutes with a pause
+  ========================================================
+  Start-KeepAwake.exe -hours 7.25 -pause
+  or
+  .\Start-KeepAwake.ps1 -Hours 7.25 -pause
+
+
+  # 5.) Keep awake for 7hrs and 15 minutes
+  ========================================================
   Start-KeepAwake.exe -hours 7.25
   or
   .\Start-KeepAwake.ps1 -Hours 7.25
