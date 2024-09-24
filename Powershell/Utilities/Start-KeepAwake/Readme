@@ -1,0 +1,18 @@
+This utility was based off other code I found on the internet. Almost none of the examples had a feature to preset the amount of time you want the application to run.
+
+If you double click the file, the application will ask you how many hours you want it to run for.
+If you run the program from the command line or batch file you can pre-enter how long you want the program to run at run time, that way you don't get asked when run.
+
+Examples:
+
+  # 1.) Keep awake for 1hr
+  ==========================================
+  Start-KeepAwake.exe -hours 1
+  
+  # 2.) Keep awake for 30 minutes
+  ==========================================
+  Start-KeepAwake.exe -hours .5
+  
+  # 3.) Keep awake for 7hrs and 15 minutes
+  ==========================================
+  Start-KeepAwake.exe -hours 7.25
