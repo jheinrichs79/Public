@@ -8,7 +8,7 @@ function Start-Decode {
 }
 function Get-Primary {
     [string]$primary = ([System.Windows.Forms.Screen]::PrimaryScreen).DeviceName
-    $PrimaryMonitorNum = $primary.remove(0,($primary.length -1))
+    $primary.remove(0,($primary.length -1))
 }
 function Get-MonitorInfo {
 
