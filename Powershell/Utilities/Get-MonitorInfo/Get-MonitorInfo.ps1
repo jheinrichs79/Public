@@ -1,5 +1,3 @@
-#Must be run as an ADMINISTRATOR
-#======================================
 function Start-Decode {
     If ($args[0] -is [System.Array]) {
         [System.Text.Encoding]::ASCII.GetString($args[0])
