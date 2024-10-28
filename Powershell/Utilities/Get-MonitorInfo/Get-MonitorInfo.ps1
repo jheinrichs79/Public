@@ -45,6 +45,8 @@ function Get-Primary {
 function Get-MonitorInfo {
 
     begin {
+        [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+        [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
         $Monitors = @()
     }
     
@@ -65,7 +67,7 @@ function Get-MonitorInfo {
             } else {
                 $Orientation = "Vertical"
             }
-            $CableTypeNum = ((Get-WmiObject WmiMonitorConnectionParams -Namespace root\wmi) | Where-Object InstanceName -like "*DELA09A*" | Select-Object VideoOutputTechnology).VideoOutputTechnology
+            $CableTypeNum = ((Get-WmiObject WmiMonitorConnectionParams -Namespace root\wmi) | Where-Object InstanceName -like "*$HardwareID*" | Select-Object VideoOutputTechnology).VideoOutputTechnology
             if ($CableTypeNum -eq 10){
                 $CableType = "Display Port"
             } elseif ($CableTypeNum -eq 5){
@@ -73,13 +75,13 @@ function Get-MonitorInfo {
             } elseif ($CableTypeNum -eq 4){
                 $CableType = "DVI"
             } else {
-                $CableType = "Unknown"
+                $CableType = "Unknown - $CableTypeNum"
             }
             $MonitorProperty = [ordered]@{
                 "Monitor Number"  = $MonitorNum
                 "Primary Display" = $FormsInfo[$MonitorNum-1].Primary
                 "Manufacturer"    = $Manufacturer.toupper()
-                #"Model Name"      = $Model
+                "Model Name"      = $Model
                 "Serial Number"   = $SerialNum
                 "Hardware ID"     = $HardwareID
                 "Width (Current)" = $FormsInfo[$MonitorNum-1].Bounds.Width
