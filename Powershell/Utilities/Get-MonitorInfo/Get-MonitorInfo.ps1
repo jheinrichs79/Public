@@ -62,11 +62,13 @@ function Get-MonitorInfo {
             [string]$Manufacturer = $FullName.Substring(0, $pos)
             [string]$Model = $FullName.Substring($pos + 1)
             [string]$SerialNum = Start-Decode $Monitor.SerialNumberID -notmatch 0
+            <#
             if (($FormsInfo[$MonitorNum-1].Bounds.Width) -gt ($FormsInfo[$MonitorNum-1].Bounds.Height)){
                 $Orientation = "Horizontal"
             } else {
                 $Orientation = "Vertical"
             }
+            #>
             $CableTypeNum = ((Get-CimInstance WmiMonitorConnectionParams -Namespace root\wmi) | Where-Object InstanceName -like "*$HardwareID*" | Select-Object VideoOutputTechnology).VideoOutputTechnology
             if ($CableTypeNum -eq 10){
                 $CableType = "Display Port"
@@ -84,9 +86,9 @@ function Get-MonitorInfo {
                 "Model Name"      = $Model
                 "Serial Number"   = $SerialNum
                 "Hardware ID"     = $HardwareID
-                "Width (Current)" = $FormsInfo[$MonitorNum-1].Bounds.Width
-                "Height (Current)"= $FormsInfo[$MonitorNum-1].Bounds.Height
-                "Orientation"     = $Orientation
+                #"Width (Current)" = $FormsInfo[$MonitorNum-1].Bounds.Width - Windows Forms Display # Doesn't consistenty match System screen #
+                #"Height (Current)"= $FormsInfo[$MonitorNum-1].Bounds.Height - Windows Forms Display # Doesn't consistenty match System screen #
+                #"Orientation"     = $Orientation - Windows Forms Display # Doesn't consistenty match System screen #
                 "Cable Connection"= $CableType
             }
             $MonitorObj = New-Object -TypeName psobject -Property $MonitorProperty
