@@ -67,7 +67,7 @@ function Get-MonitorInfo {
             } else {
                 $Orientation = "Vertical"
             }
-            $CableTypeNum = ((Get-WmiObject WmiMonitorConnectionParams -Namespace root\wmi) | Where-Object InstanceName -like "*$HardwareID*" | Select-Object VideoOutputTechnology).VideoOutputTechnology
+            $CableTypeNum = ((Get-CimInstance WmiMonitorConnectionParams -Namespace root\wmi) | Where-Object InstanceName -like "*$HardwareID*" | Select-Object VideoOutputTechnology).VideoOutputTechnology
             if ($CableTypeNum -eq 10){
                 $CableType = "Display Port"
             } elseif ($CableTypeNum -eq 5){
