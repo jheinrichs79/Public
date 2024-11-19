@@ -1,0 +1,7 @@
+FROM,TO,TCP,UDP,Direction
+Server01,24.24.24.1,"443,80",34,unidirectional
+Server02,24.24.24.2,443,"34, 35",unidirectional
+Server02,24.24.24.1,,34,unidirectional
+Server01,24.24.24.2,443,"34, 35",unidirectional
+24.24.24.1,ServerAp01,"443,80","34, 35",omnidirectional
+24.24.24.2,ServerAp02,443,34,omnidirectional
