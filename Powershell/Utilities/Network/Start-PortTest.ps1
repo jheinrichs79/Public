@@ -1,87 +1,192 @@
-function Start-Portlistener {
-    [CmdletBinding(DefaultParameterSetName = 'All')]
+<#
+========================================================================
+Written by: 	Jared Heinrichs
+URL:		https://github.com/jheinrichs79/Public/
+========================================================================
+EULA - Completely free to use as long as you keep this header
+------------------------------------------------------------------------
+
+Save as: Start-PortTest.ps1
+Run it as:
+
+Show only the tests that failed and format it as a table:
+.\Start-PortTest.ps1 -NetworkHost 192.168.101.45 -TCPPorts 900,9000,1234 -UDPPorts 88,137 | Where-Object TestSucceeded -eq $false | Format-Table
+
+Show all test info on screen and then save the output to “C:\bin\PortTest.csv
+.\Start-PortTest.ps1 -NetworkHost 192.168.101.45 -TCPPorts 900,9000,1234 -UDPPorts 88,137 -LogFileFolder "C:\bin"
+
+Show all test info on screen and then save the output to “C:\bin\PortTest.csv . Overwrite the log file with only the data from this test.
+.\Start-PortTest.ps1 -NetworkHost 192.168.101.45 -TCPPorts 900,9000,1234 -UDPPorts 88,137 -LogFileFolder "C:\bin" -OverWriteLog
+
+#>
+
+#Global Params
+param (
+    $NetworkHost,
+    $TCPPorts,
+    $UDPPorts,
+    $LogFileFolder,
+    [switch]$OverWriteLog
+)
+#Worker Functions ================================================================
+function Start-PortTestTCP {
+    [CmdletBinding()]
     param (
-        [parameter(Mandatory = $false, HelpMessage = "Enter the tcp port you want to use to listen on, for example 3389", parameterSetName = "TCP")]
-        [ValidatePattern('^[0-9]+$')]
-        [ValidateRange(0, 65535)]
-        [int]$TCPPort,
-        [parameter(Mandatory = $false, HelpMessage = "Enter the udp port you want to use to listen on, for example 3389", parameterSetName = "UDP")]
-        [ValidatePattern('^[0-9]+$')]
-        [ValidateRange(0, 65535)]
-        [int]$UDPPort
+        $NetworkHost,
+        $TCPPorts
     )
-    #Test if TCP port is already listening port before starting listener
-    if ($TCPPort) {
-        $Global:ProgressPreference = 'SilentlyContinue' #Hide GUI output
-        $testtcpport = Test-Connection -ComputerName localhost -TCPPort $TCPPort -WarningAction SilentlyContinue -ErrorAction Stop
-        if ($testtcpport.TcpTestSucceeded -ne $True) {
-            Write-Host ("TCP port {0} is available, continuing..." -f $TCPPort) -ForegroundColor Green
-        }
-        else {
-            Write-Warning ("TCP Port {0} is already listening, aborting..." -f $TCPPort)
-            return
-        }
-        #Start TCP Server
-        #Used procedure from https://riptutorial.com/powershell/example/18117/tcp-listener
-        $ipendpoint = new-object System.Net.IPEndPoint([ipaddress]::any, $TCPPort) 
-        $listener = new-object System.Net.Sockets.TcpListener $ipendpoint
-        $listener.start()
-        Write-Host ("Now listening on TCP port {0}, press Escape to stop listening" -f $TCPPort) -ForegroundColor Green
-        while ( $true ) {
-            if ($host.ui.RawUi.KeyAvailable) {
-                $key = $host.ui.RawUI.ReadKey("NoEcho,IncludeKeyUp,IncludeKeyDown")
-                if ($key.VirtualKeyCode -eq 27 ) { 
-                    $listener.stop()
-                    Write-Host ("Stopped listening on TCP port {0}" -f $TCPPort) -ForegroundColor Green
-                    return
-                }
-            }
-        }
-    }
-        
     
-    #Test if UDP port is already listening port before starting listener
-    if ($UDPPort) {
-        #Used procedure from https://cloudbrothers.info/en/test-udp-connection-powershell/
-        try {
-            # Create a UDP client object
-            $UdpObject = New-Object system.Net.Sockets.Udpclient($UDPPort)
-            # Define connect parameters
-            $computername = "localhost"
-            $UdpObject.Connect($computername, $UDPPort)    
-        
-            # Convert current time string to byte array
-            $ASCIIEncoding = New-Object System.Text.ASCIIEncoding
-            $Bytes = $ASCIIEncoding.GetBytes("$(Get-Date -UFormat "%Y-%m-%d %T")")
-            # Send data to server
-            [void]$UdpObject.Send($Bytes, $Bytes.length)    
-        
-            # Cleanup
-            $UdpObject.Close()
-            Write-Host ("UDP port {0} is available, continuing..." -f $UDPPort) -ForegroundColor Green
-        }
-        catch {
-            Write-Warning ("UDP Port {0} is already listening, aborting..." -f $UDPPort)
-            return
-        }
-        #Start UDP Server
-        #Used procedure from https://github.com/sperner/PowerShell/blob/master/UdpServer.ps1
-        $endpoint = new-object System.Net.IPEndPoint( [IPAddress]::Any, $UDPPort)
-        $udpclient = new-object System.Net.Sockets.UdpClient $UDPPort
-        Write-Host ("Now listening on UDP port {0}, press Escape to stop listening" -f $UDPPort) -ForegroundColor Green
-        while ( $true ) {
-            if ($host.ui.RawUi.KeyAvailable) {
-                $key = $host.ui.RawUI.ReadKey("NoEcho,IncludeKeyUp,IncludeKeyDown")
-                if ($key.VirtualKeyCode -eq 27 ) { 
-                    $udpclient.Close()
-                    Write-Host ("Stopped listening on UDP port {0}" -f $UDPPort) -ForegroundColor Green
-                    return
-                }
+    begin {
+        $LogArray = @()
+        $Result = $false
+    }
+    
+    process {
+        foreach ($p in [array]$TCPPorts) {
+            #Build Custom TCP Client
+            $BuildTCPClient = new-Object system.Net.Sockets.TcpClient
+            
+            #Run Asyncronis Test
+            $Connection = $BuildTCPClient.ConnectAsync($NetworkHost,$p)
+            for($i=0; $i -lt 10; $i++) {
+				if ($Connection.isCompleted) { break; }
+				Start-Sleep -milliseconds 100
+			}
+
+            #Close Custom TCPClient
+			$BuildTCPClient.Close();
+			
+            #Check TCP Test
+            if ($Connection.Status -eq "RanToCompletion") {
+				$Result = $true
+			}
+
+            $objectPortTest = [ordered]@{
+                Date                = Get-Date -UFormat "%Y/%m/%d"
+                Time                = Get-Date -UFormat "%R"
+                Source              = $env:computername
+                Destination         = $NetworkHost
+                Protocol            = "TCP"
+                Port                = $p
+                TestSucceeded       = $Result
             }
-            if ( $udpclient.Available ) {
-                $content = $udpclient.Receive( [ref]$endpoint )
-                Write-Host "$($endpoint.Address.IPAddressToString):$($endpoint.Port) $([Text.Encoding]::ASCII.GetString($content))"
-            }
+            $Test = New-Object -TypeName psobject -Property $objectPortTest
+            $LogArray += $Test
         }
     }
+    
+    end {
+        #RETURN
+        $LogArray
+    }
+}
+function Start-PortTestUDP {
+    [CmdletBinding()]
+    param (
+        $NetworkHost,
+        $UDPPorts
+    )
+    
+    begin {
+        $LogArray = @()
+        $Result = $false
+    }
+    
+    process {
+        foreach ($p in [array]$UDPPorts) {
+            #Build Custom TCP Client
+            $BuildUDPClient = new-Object system.Net.Sockets.UDPClient
+            $BuildUDPClient.Client.ReceiveTimeout = 500
+            #Connect            
+            $BuildUDPClient.Connect($NetworkHost,$p)
+            #Send a single byte 0x01
+			[void]$BuildUDPClient.Send(1,1)
+			
+            
+            $l = new-object system.net.ipendpoint([system.net.ipaddress]::Any,0)
+			try {
+				if ($BuildUDPClient.Receive([ref]$l)) {
+					# We have received some UDP data from the remote host in return
+					$Result = $true
+				}
+			} catch {
+				if ($Error[0].ToString() -match "failed to respond") {
+					# We haven't received any UDP data from the remote host in return
+					# Let's see if we can ICMP ping the remote host
+					if ((Get-wmiobject win32_pingstatus -Filter "address = '$NetworkHost' and Timeout=1000 and ResolveAddressNames=false").StatusCode -eq 0) {
+						# We can ping the remote host, so we can assume that ICMP is not
+						# filtered. And because we didn't receive ICMP port-unreachable before,
+						# we can assume that the remote UDP port is open
+						$Result = $true
+					}
+				} elseif ($Error[0].ToString() -match "forcibly closed") {
+					# We have received ICMP port-unreachable, the UDP port is closed
+					$Result = $false
+				}
+			}
+			$BuildUDPClient.Close()
+
+            $objectPortTest = [ordered]@{
+                Date                = Get-Date -UFormat "%Y/%m/%d"
+                Time                = Get-Date -UFormat "%R"
+                Source              = $env:computername
+                Destination         = $NetworkHost
+                Protocol            = "UDP"
+                Port                = $p
+                TestSucceeded       = $Result
+            }
+            $Test = New-Object -TypeName psobject -Property $objectPortTest
+            $LogArray += $Test
+        }
+    }
+    
+    end {
+        #RETURN
+        $LogArray
+    }
+}
+
+#[[Program Body]]====================================================================
+
+#----------------------------------------------------------------[Check Requirements]
+#
+# Check and see if they entered any TCP or UDP ports. If both failed remind them
+# how to use the test
+
+if (!$TCPPorts -and !$UDPPorts) {
+    Write-Host "usage: Start-PortTest -host <port|ports>"
+    Write-Host ' e.g.: .\Start-PortTest.ps1 -host "192.168.1.2" -TCPPorts 445,80,443'
+    return
+}
+
+#If they want to export the log data the Log Folder must exist
+if ($LogFileFolder){
+    if (!(Test-Path -Path $LogFileFolder)) {
+        Write-Host "$LogFileFolder does not exist."
+        return
+    }
+}
+#----------------------------------------------------------------[Start the tests]
+
+$LogArray = @()
+
+
+if ($TCPPorts){
+    $LogArray += Start-PortTestTCP -NetworkHost $NetworkHost -TCPPorts $TCPPorts
+}
+if ($UDPPorts){
+    $LogArray += Start-PortTestUDP -NetworkHost $NetworkHost -UDPPorts $UDPPorts
+}
+if ($LogFileFolder){
+    $LogArray | Format-Table
+    Write-Host
+    Write-Host
+    $FullPath = $LogFileFolder+"/PortTest.csv"
+    if ($OverWriteLog){
+        $LogArray | Export-Csv $FullPath -Force
+    } else {
+        $LogArray | Export-Csv $FullPath -Append
+    }
+} else {
+    $LogArray
 }
