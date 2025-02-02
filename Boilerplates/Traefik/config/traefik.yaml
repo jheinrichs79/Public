@@ -1,0 +1,22 @@
+## ========================================================================
+##
+## Things to READ
+## --------------
+##
+##    This file will setup the STATIC Configuration options in Traefic
+##
+## ========================================================================
+
+---
+global:
+  checkNewVersion: true
+log:
+  level: DEBUG
+api:
+  dashboard: true
+  insecure: true
+entryPoints:
+  web:
+    address: :80
+  websecure:
+    address: :443
