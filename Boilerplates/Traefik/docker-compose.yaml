@@ -1,0 +1,38 @@
+## ========================================================================
+##
+## Things to READ
+## --------------
+##
+##    https://doc.traefik.io/traefik/getting-started/quick-start/
+##    https://doc.traefik.io/traefik/routing/routers/
+##
+##
+## Things to DO
+## --------------
+##
+##    1.) Create Network for Traefik Reverse Proxy
+##            docker network create frontend
+##    
+##    2.) Start Traefik
+##            docker compose up (To run this docker compose file)
+##
+## ========================================================================
+
+---
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
+    networks:
+      - frontend
+    restart: unless-stopped
+networks:
+  frontend:
+    external: true
