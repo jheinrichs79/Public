@@ -20,3 +20,9 @@ entryPoints:
     address: :80
   websecure:
     address: :443
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: frontend
+    watch: true
