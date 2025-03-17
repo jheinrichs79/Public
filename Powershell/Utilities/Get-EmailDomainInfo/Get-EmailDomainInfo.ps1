@@ -3,7 +3,7 @@
     It can takes two parameters: DomainName and DNSserver. 
         The DomainName parameter is an array of strings that contains the domain names for which the function will retrieve information. 
         The DNSserver parameter is a string that specifies the DNS server to use when resolving DNS records. 
-    If the DNSserver parameter is not specified, the function will use the default DNS server 
+    If the DNSserver parameter is not specified, the function will use the default DNS server which is 1.1.1.1
 #>
 function Get-MailDomainInfo {
     param(
