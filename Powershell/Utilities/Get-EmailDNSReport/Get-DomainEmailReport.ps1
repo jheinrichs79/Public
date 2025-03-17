@@ -31,7 +31,7 @@ function Get-EmailDNSReport {
             #Set variables to Not enabled or found if they can't be retrieved
             $errorfinding = 'Not enabled'
            
- 
+
             if ($null -eq $dkim1 -and $null -eq $dkim2) {
                 $dkim = $errorfinding
             }
