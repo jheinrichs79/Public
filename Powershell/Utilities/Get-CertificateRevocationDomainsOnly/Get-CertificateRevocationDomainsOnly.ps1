@@ -1,4 +1,4 @@
-function Get-CertificateDomainsOnly {
+function Get-CertificateRevocationDomainsOnly {
     param (
         [string[]]$stores = @("LocalMachine\My", "LocalMachine\Root", "LocalMachine\CA", "CurrentUser\My", "CurrentUser\Root", "CurrentUser\CA"),
         [string]$outputPath
@@ -49,4 +49,4 @@ function Get-CertificateDomainsOnly {
 }
  
 # Run the function (** CHANGE OUTPUT PATH! **)
-Get-CertificateDomainsOnly -outputPath "C:\folder\certUrls.csv"
+Get-CertificateRevocationDomainsOnly -outputPath "C:\folder\certUrls.csv"
