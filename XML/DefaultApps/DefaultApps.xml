@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DefaultAssociations>
+  <! -- Outlook file types -->
+  <Association Identifier=".eml" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".hol" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".ics" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".msg" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".oft" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".pst" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".vcf" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier=".vcs" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier="mailto" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier="ms-outlook" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <Association Identifier="mailto" ProgId="Outlook.URL.mailto.15" ApplicationName="Outlook" />
+  <! -- Brava file types for .tif files -->
+  <Association Identifier=".tif" ProgId="AppX43hnxtbyyps62jhe9sqpdzxn1790zetc" ApplicationName="Photos" />
+  <Association Identifier=".tiff" ProgId="AppX43hnxtbyyps62jhe9sqpdzxn1790zetc" ApplicationName="Photos" />
+  <! -- Adobe Reader PDF file types -->
+  <Association Identifier=".pdf" ProgId="AcroExch.Document.DC" ApplicationName="Adobe Acrobat Reader" />
+</DefaultAssociations>
