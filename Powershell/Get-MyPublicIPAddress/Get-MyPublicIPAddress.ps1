@@ -3,21 +3,21 @@ function Get-MyPublicIPAddress {
     param (
         
     )
-    
-    begin {
-        $myip = "myip.opendns.com"
-        $resolver = "resolver1.opendns.com"
-        $var = nslookup myip.opendns.com resolver1.opendns.com
-        Write-Host $myip
-        Write-Host $resolver
-    }
-    
+    <#
+        This script will get your public IP address. If the ipify service is down or you don't have internet 
+        it will display "0.0.0.0" for your address
+    #>
     process {
-        $var = nslookup $myip $resolver
+        # PowerShell script to display public IP address
+        try {
+            $ip = (Invoke-RestMethod -Uri "https://api.ipify.org?format=json").ip
+        } catch {
+            $ip = 0.0.0.0
+        }
     }
     
     end {
-        $var
+        $ip
     }
 }
 Get-MyPublicIPAddress
