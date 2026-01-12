@@ -119,4 +119,4 @@ function Add-JellyfinVideosToPlaylist {
         Select-Object -ExpandProperty Items |
         Format-Table Name, Id
 }
-Add-JellyfinVideosToPlaylist -ApiKey $ApiKey -Limit $Limit
+Add-JellyfinVideosToPlaylist -ApiKey $ApiKey -Limit $Limit -SearchTerm $SearchTerm
