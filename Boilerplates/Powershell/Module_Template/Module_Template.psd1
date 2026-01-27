@@ -1,16 +1,16 @@
-﻿@{
+@{
 
-RootModule = 'Module_Template.psm1'                             # Script module or binary module file associated with this manifest.
-ModuleVersion = '1.0.0'                                         # Version number of this module.
-GUID = '268cd8da-5f4a-4f84-85b2-fc895ffb0837'                   # ID used to uniquely identify this module
+RootModule = 'VAR_ROOTMODULE.psm1'
+ModuleVersion = '1.0.0'
+GUID = 'VAR_PSD1GUID'
 
-Author = 'Jared Heinrichs'                                      # Author of this module
-CompanyName = 'Jared Heinrichs - Technology Substack'           # Company or vendor of this module
-HelpInfoURI = 'https://jaredheinrichs.substack.com/'            # HelpInfo URI of this module
-Copyright = '(c) Jared Heinrichs. All rights reserved.'         # Copyright statement for this module
+Author = 'VAR_AUTHOR'
+CompanyName = 'VAR_COMPANYNAME'
+HelpInfoURI = 'VAR_HELPINFOURI'
+Copyright = '(c) VAR_AUTHOR. All rights reserved.'
 
-Description = 'PLEASE_ENTER_DESCRIPTION'                        # Description of the functionality provided by this module
-PowerShellVersion = '5.1'                                       # Minimum version of the Windows PowerShell engine required by this module
+Description = 'VAR_DESCRIPTION'
+PowerShellVersion = 'VAR_PSVERSION'
 
 # Functions to export from this module
 # ====================================
@@ -24,11 +24,11 @@ PowerShellVersion = '5.1'                                       # Minimum versio
 PrivateData = @{
     # ----------------------------------------------------------------------------------------------------------
     PSData = @{
-        Tags = @('TAG01', 'TAG02', 'TAG03')                                                                       # Tags applied to this module. These help with module discovery in online galleries.
-        LicenseUri = ''                                                                                           # A URL to the license for this module.
-        ProjectUri = 'https://github.com/jheinrichs79/Public/new/main/Boilerplates/Powershell/Module_Template'    # A URL to the main website for this project.
-        # IconUri = ''                                                                                            # A URL to an icon representing this module.
-        ReleaseNotes = 'Best Module ever'                                                                         # ReleaseNotes of this module
+        Tags = @('TAG01', 'TAG02', 'TAG03')
+        LicenseUri = 'VAR_LICENSEURI'
+        ProjectUri = 'VAR_GITPROJECTURI'
+        IconUri = 'VAR_ICONURI'
+        ReleaseNotes = 'VAR_RELEASENOTES'
     } # End of Module_Template hashtable
    # ----------------------------------------------------------------------------------------------------------
 } # End of PrivateData hashtable
