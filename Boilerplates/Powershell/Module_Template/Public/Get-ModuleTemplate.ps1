@@ -10,6 +10,7 @@
         [string]$Url='https://github.com/jheinrichs79/Public/tree/main/Boilerplates/Powershell/Module_Template'
 
     )
+    Clear-Host
 
     # -------------------------------
     # Validate Git is installed
@@ -20,6 +21,8 @@
 
     #Set Local Module Template Folder based off the Base Folder and the name you have given the module.
     $LocalFolder = Join-Path $BaseLocalFolder $ModuleName
+    $psd1File = Join-Path $LocalFolder ($ModuleName+'.psd1')
+    $psm1File = Join-Path $LocalFolder ($ModuleName+'.psm1')
 
     # -------------------------------
     # Parse GitHub URL
@@ -102,9 +105,65 @@
     Write-Host "   TEMP_ROOT_PATH = $TempRoot"
     Remove-Item $TempRoot -Recurse -Force
 
+
+
     Write-Host
     Write-Host "Module Template Can Be Found here:" -ForegroundColor Green
     Write-Host "   $LocalFolder"
     Write-Host
     Write-Host
+
+    # -------------------------------
+    # Rename files
+    # -------------------------------
+    $newName = "$ModuleName"
+
+    $file = Get-ChildItem -Path $LocalFolder -File | Where-Object Name -EQ 'Module_Template.psm1'
+    if ($file) {
+        $newFullNamePsm1 = Join-Path $LocalFolder ($ModuleName + $file.Extension)
+        Rename-Item -Path $file.FullName -NewName $newFullNamePsm1
+    }
+    $file = Get-ChildItem -Path $LocalFolder -File | Where-Object Name -EQ 'Module_Template.psd1'
+    if ($file) {
+        $newFullNamePsd1 = Join-Path $LocalFolder ($ModuleName + $file.Extension)
+        Rename-Item -Path $file.FullName -NewName $newFullNamePsd1
+    }
+
+
+    # -------------------------------
+    # Update Variables in .psd1
+    # -------------------------------
+
+    Write-Host "------------------------------------------------------------------------------------------"
+    Write-Host " Now that the Module Template has been downloaded... Let's fill in the psd1 file info."
+    Write-Host "    NOTE - If you enter nothing to the question, option will be blank in the file. "
+    Write-Host "------------------------------------------------------------------------------------------"
+    Write-Host
+
+    $FullName = Read-Host "Please Enter Your First and Last Name"
+    $CompanyName = Read-Host "Please Enter Your Company Name"
+    $HelpInfoURI = Read-Host "Please Enter The Website for the Module Help or Your Own Website"
+    $Description = Read-Host "Please Enter Brief Description of Module"
+    $Version = Read-Host "Please Enter either 5.1 or 7 for Powershell version"
+    $LICENSEURI = Read-Host "Please Enter License URI"
+    $GITPROJECTURI = Read-Host "Please Enter Git Project URI"
+    $ICONURI = Read-Host "Please Enter Icon URI "
+    $RELEASENOTES = Read-Host "Please Enter Release Notes"
+
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_ROOTMODULE' -Replacement $ModuleName
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_PSD1GUID' -Replacement (New-Psd1Guid)
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_AUTHOR' -Replacement $FullName
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_COMPANYNAME' -Replacement $CompanyName
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_HELPINFOURI' -Replacement $HelpInfoURI
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_DESCRIPTION' -Replacement $Description
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_PSVERSION' -Replacement $Version
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_LICENSEURI' -Replacement $LICENSEURI
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_GITPROJECTURI' -Replacement $GITPROJECTURI
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_ICONURI' -Replacement $ICONURI
+    Set-Placeholder -Path $newFullNamePsd1 -Placeholder 'VAR_RELEASENOTES' -Replacement $RELEASENOTES
+
+    Write-Host
+    Write-Host
+
+
 }
