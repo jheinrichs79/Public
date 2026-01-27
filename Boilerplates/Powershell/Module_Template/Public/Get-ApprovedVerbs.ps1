@@ -1,4 +1,4 @@
-function Get-ApprovedVerbs {
+﻿function Get-ApprovedVerbs {
     
     $ApprovedVerbs = `
     
