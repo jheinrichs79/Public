@@ -14,9 +14,9 @@ PowerShellVersion = 'VAR_PSVERSION'
 
 # Functions to export from this module
 # ====================================
-FunctionsToExport = '*' #ALL_Functions
+#FunctionsToExport = '*' #ALL_Functions
 # or
-# FunctionsToExport = @('Get-Function01','Get-Function02') #Specific_Functions_Only
+FunctionsToExport = @('Get-Function01','Get-Function02') #Specific_Functions_Only
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. 
 # This may also contain a Module_Template hashtable with additional module metadata used by PowerShell.
@@ -91,3 +91,4 @@ Module Settings Not used
 
 #>
 }
+
