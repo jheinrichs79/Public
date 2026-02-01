@@ -1,8 +1,4 @@
-﻿# Module vars
-$ModulePath = $PSScriptRoot
-
-# Collect public and private function files
-$Public  = @(Get-ChildItem -Path "$PSScriptRoot/Public"  -Filter *.ps1 -ErrorAction SilentlyContinue)
+﻿$Public  = @(Get-ChildItem -Path "$PSScriptRoot/Public"  -Filter *.ps1 -ErrorAction SilentlyContinue)
 $Private = @(Get-ChildItem -Path "$PSScriptRoot/Private" -Filter *.ps1 -ErrorAction SilentlyContinue)
 
 # Collect private module folders
@@ -31,9 +27,17 @@ foreach ($Module in $PrivateModules) {
 }
 
 # Auto-export all functions defined in Public
-$PublicFunctions = foreach ($file in $Public) {
-    Select-String -Path $file.FullName -Pattern 'function\s+([A-Za-z0-9_-]+)' |
-        ForEach-Object { $_.Matches.Groups[1].Value }
+$PublicFunctions = @()
+if ($Public) {
+    $PublicFunctions = foreach ($file in $Public) {
+        Select-String -Path $file.FullName -Pattern '(?i)^function\s+([A-Za-z0-9_-]+)\s*\{' |
+            ForEach-Object { $_.Matches.Groups[1].Value } |
+            Select-Object -Unique
+    }
 }
 
-Export-ModuleMember -Function $PublicFunctions
+if ($PublicFunctions.Count -gt 0) {
+    Export-ModuleMember -Function $PublicFunctions
+} else {
+    Write-Verbose "No public functions found to export from $PSScriptRoot/Public"
+}
