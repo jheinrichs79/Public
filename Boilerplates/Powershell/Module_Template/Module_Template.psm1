@@ -1,4 +1,4 @@
-# Module vars
+﻿# Module vars
 $ModulePath = $PSScriptRoot
 
 # Collect public and private function files
