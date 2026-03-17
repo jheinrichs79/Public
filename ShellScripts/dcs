@@ -1,0 +1,118 @@
+#!/bin/bash
+
+# ---------------------------
+# Colors
+# ---------------------------
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+RESET="\e[0m"
+
+# ---------------------------
+# Local and Global .env paths
+# ---------------------------
+
+# Local .env (same folder as docker-compose.yaml)
+LOCAL_ENV="$(pwd)/.env"
+
+# Global .env (production)
+GLOBAL_ENV="$HOME/git/gitHubRepoName/dockerCompose/env/.env"
+
+# Determine which env file to use
+if [ -f "$LOCAL_ENV" ]; then
+    ENV_FILE="$LOCAL_ENV"
+else
+    ENV_FILE="$GLOBAL_ENV"
+fi
+
+# Commands that require an env file
+REQUIRES_ENV=("up" "pull" "build" "run" "restart" "logs")
+
+# Helper: check if a value exists in REQUIRES_ENV array
+requires_env() {
+    for cmd in "${REQUIRES_ENV[@]}"; do
+        [[ "$cmd" == "$1" ]] && return 0
+    done
+    return 1
+}
+
+# If the command requires env, verify the chosen env file exists
+if requires_env "$1"; then
+    if [ ! -f "$ENV_FILE" ]; then
+        echo -e "${RED}Error: No .env file found locally or at fallback path:${RESET}"
+        echo -e "  Tried: $LOCAL_ENV"
+        echo -e "  Tried: $GLOBAL_ENV"
+        exit 1
+    fi
+fi
+
+# ---------------------------
+# Helper: run docker compose with env file
+# ---------------------------
+_dc() {
+    docker compose --env-file "$ENV_FILE" "$@"
+}
+
+# ---------------------------
+# Status command
+# ---------------------------
+status_info() {
+    echo -e "${BLUE}Docker Compose Suite (dcs) Status${RESET}"
+    echo "----------------------------------"
+
+    echo -e "${YELLOW}Working directory:${RESET} $(pwd)"
+
+    # docker-compose.yaml check
+    if [ -f "docker-compose.yaml" ]; then
+        echo -e "${GREEN}Compose file: FOUND${RESET}"
+    else
+        echo -e "${RED}Compose file: NOT FOUND${RESET}"
+    fi
+
+    # Env file check
+    if [ -f "$ENV_FILE" ]; then
+        echo -e "${GREEN}Env file in use:${RESET} $ENV_FILE"
+    else
+        echo -e "${RED}Env file in use: MISSING${RESET}"
+    fi
+
+    echo "----------------------------------"
+}
+
+# ---------------------------
+# Command dispatcher
+# ---------------------------
+case "$1" in
+    up)
+        shift
+        _dc up "$@"
+        ;;
+    down)
+        docker compose down
+        ;;
+    pull)
+        _dc pull
+        ;;
+    build)
+        _dc build
+        ;;
+    run)
+        shift
+        _dc run "$@"
+        ;;
+    restart)
+        _dc down
+        _dc up -d
+        ;;
+    logs)
+        _dc logs -f
+        ;;
+    status)
+        status_info
+        ;;
+    *)
+        echo -e "${YELLOW}Usage:${RESET} dcs {up|down|pull|build|run <service>|restart|logs|status}"
+        exit 1
+        ;;
+esac
